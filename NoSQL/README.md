@@ -10,9 +10,9 @@
 Lecture 01　MongoDB 101
 Lecture 02　數據庫(database)
 Lecture 03　集合表(collection)
-Lecture 04　資料檔(document)(1):新增
-Lecture 05　資料檔(document)(2):查詢
-Lecture 06　資料檔(document)(3):修改、刪除
+Lecture 04　資料檔(document)(1): 新增
+Lecture 05　資料檔(document)(2): 查詢
+Lecture 06　資料檔(document)(3): 修改、刪除
 Lecture 07　索引
 Lecture 08　資料管理
 Lecture 09　Redis 101
