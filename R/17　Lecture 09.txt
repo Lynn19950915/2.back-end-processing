@@ -1,0 +1,63 @@
+
+Lecture 09　資料庫物件的維護(1): 資料表與資料限制條件
+
+--------------------------------------------------------------------------------
+
+9-1　新建資料表
+
+> create table dept(deptno smallint(4), dname varchar(14));
+> create table [if not exists] dept(deptno smallint(4), dname varchar(14));　#若存在則不新建
+> create table [if not exists] dept(deptno smallint(4), dname varchar(14)) engine=innodb;
+
+> create table EMP10 like emp;　#無法篩選欄位、指定名稱，保留結構(PRI、not null)而不新增資料
+> create table EMP10 as select * from emp;　#可以篩選欄位、指定名稱，保留結構(not null)新增資料
+> create table EMP10 as select empno "EMP#", ename EMPLOYEE from emp where deptno=10;
+
+
+--------------------------------------------------------------------------------
+
+9-2　欄位設定
+
+1.欄位檢查條件
+ > create table dept(deptno smallint(4) not null, dname varchar(14) default "None");　#dname若為空，則自動填入None
+ > create table dept(deptno smallint(4) auto_increment, dname varchar(14));　#欄位自動編號(需為數值型態)
+ > create table dept(deptno smallint(4) auto_increment, dname varchar(14)) auto_increment=100;　#通常與PRI或UNI搭配使用
+
+
+2.KEY constraint
+ > create table dept(deptno smallint(4) primary key, dname varchar(14));　#僅一組、不重複且不為null
+ > create table dept(deptno smallint(4) primary key, dname varchar(14) unique);　#可多組、不重複且可為null
+
+ > create table dept(deptno samllint(4), dname varchar(14)
+   [constraint PRI] primary key(deptno, dname));
+   [constraint UNI] unique(deptno, dname));
+   [constraint FRK] foreign key(deptno) references emp(deptno));　#constraint+取名可省略，但需宣告參照變數
+   [constraint FRK] foreign key(deptno) references emp(deptno) on delete/update cascade);　#刪除、修改時相依影響
+   [constraint FRK] foreign key(deptno) references emp(deptno) on delete/update set null);　#刪除、修改時設為空值
+
+  
+--------------------------------------------------------------------------------  
+
+9-3　資料表維護
+
+1.欄位相關
+ > alter table EMP10 add [column] mgr smallint(6);
+ > alter table EMP10 add [column] hiredate date first/after ename;　#指定欄位位置
+ > alter table EMP10 add [column](mgr smallint(6), hiredate date);
+ > alter table EMP10 drop [column] empno, mgr;
+
+ > alter table EMP10 alter [column] comm drop/set default 0;　#alter用於預設值設定
+ > alter table EMP10 modify [column] comm int(11) not null after sal;　#modify用於修改欄位型態、順序
+ > alter table EMP10 change [column] comm COMMISSION int(11);　#change用於修改欄位定義(包含型態、順序) 
+
+
+2.其他維護
+ > alter table EMP10 add
+   [constraint PRI] primary key(empno);　#可不命名(PRI必為唯一)
+   [constraint UNI] unique(ename, job);　#複合唯一鍵。刪除: drop index+名稱
+   [constraint FRK] foreign key(mgr) references emp(mgr);　#外來鍵。刪除: drop foreign key+名稱
+
+ > alter table EMP10 rename [to] EMPLOYEE10;
+ > alter table EMP10 engine=myisam;
+ > truncate table dept;　#刪除資料，保留結構
+ > drop table dept;
